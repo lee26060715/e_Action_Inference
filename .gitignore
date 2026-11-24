@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+
+# 가상환경
+.venv/
+venv/
+
+# 환경변수
+.env
+
+# AI 모델 및 가중치
+*.joblib
+*.pt
+
+# 압축파일
+*.zip
+
+# 영상 및 업로드 파일
+*.mp4
+*.avi
+media/
+
+# 데이터베이스
+*.sqlite3
+
+# 로그
+*.log
