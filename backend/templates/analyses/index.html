@@ -1,0 +1,110 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/analyses.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="analysis-container">
+
+    <h2>동작 분석</h2>
+    <p>{{ user.username }}님, 분석할 영상을 선택하세요.</p>
+
+    <!-- 분석 요청 -->
+    <section class="analysis-card">
+        <h3>새로운 분석</h3>
+
+        <form id="analysis-form" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <input type="hidden" name="input_type" value="UPLOAD">
+
+            <label for="title">분석 제목</label>
+            <input type="text" id="title" name="title"
+                   maxlength="100" placeholder="분석 제목을 입력하세요">
+
+            <label for="memo">메모</label>
+            <textarea id="memo" name="memo"
+                      rows="3" placeholder="메모를 입력하세요"></textarea>
+
+            <label for="expected_action">예상 동작 (선택)</label>
+            <select id="expected_action" name="expected_action">
+                <option value="">선택하지 않음</option>
+                <option value="bend_return">허리를 굽혔다 펴기</option>
+                <option value="leg_raise_lower">다리 올렸다 내리기</option>
+                <option value="walk_turn_walk">걷고 돌아서 걷기</option>
+                <option value="drink_return">마시고 원위치</option>
+                <option value="sit_stand">앉았다 일어나기</option>
+                <option value="wave">손 흔들기</option>
+            </select>
+
+            <label for="video">분석 영상 (MP4)</label>
+            <input type="file" id="video" name="video"
+                   accept=".mp4" required>
+
+            <button type="submit" id="start-button" disabled>
+                분석 시작
+            </button>
+        </form>
+    </section>
+
+    <!-- 분석 상태 -->
+    <section class="analysis-card">
+        <h3>분석 상태</h3>
+
+        <p>Job ID: <span id="job-id">-</span></p>
+        <p>상태: <span id="job-status">대기 중</span></p>
+        <p id="error-message" class="error-message"></p>
+    </section>
+
+    <!-- 분석 결과 -->
+    <section class="analysis-card">
+        <h3>분석 결과</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Track ID</th>
+                    <th>인식 동작</th>
+                    <th>신뢰도</th>
+                    <th>Window 수</th>
+                </tr>
+            </thead>
+            <tbody id="prediction-body">
+                <tr>
+                    <td colspan="4">아직 분석 결과가 없습니다.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 분석 기록 -->
+    <section class="analysis-card">
+        <h3>최근 분석 기록</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Job ID</th>
+                    <th>제목</th>
+                    <th>입력 방식</th>
+                    <th>상태</th>
+                    <th>생성 시간</th>
+                </tr>
+            </thead>
+            <tbody id="history-body">
+                <tr>
+                    <td colspan="5">분석 기록이 없습니다.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/analyses.js' %}"></script>
+{% endblock %}

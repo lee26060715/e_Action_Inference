@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vision AI 동작 인식 서비스</title>
     <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
     <header class="site-header">
@@ -15,7 +17,7 @@
             {% if user.is_authenticated %}
                 <span>{{ user.username }}님</span>
 
-                <a href="/api/analyses/">분석 목록</a>
+                <a href="{% url 'analysis_home' %}">동작 분석</a>
 
                 {% if user.is_staff %}
                     <a href="{% url 'admin:index' %}">관리자</a>
@@ -36,5 +38,6 @@
         {% block content %}
         {% endblock %}
     </main>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

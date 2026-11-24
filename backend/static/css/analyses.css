@@ -1,0 +1,78 @@
+
+.analysis-container {
+    max-width: 1000px;
+    margin: 32px auto;
+    padding: 0 20px;
+}
+
+.analysis-card {
+    background-color: white;
+    padding: 24px;
+    margin-bottom: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    overflow-x: auto;
+}
+
+.analysis-card h3 {
+    margin-top: 0;
+    color: #26354a;
+}
+
+#analysis-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#analysis-form label {
+    font-weight: bold;
+}
+
+#analysis-form input,
+#analysis-form textarea,
+#analysis-form select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+#start-button {
+    margin-top: 12px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#start-button:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+#job-status {
+    font-weight: bold;
+    color: #3568b8;
+}
+
+.error-message {
+    color: #c62828;
+}
+
+.analysis-card table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.analysis-card th,
+.analysis-card td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+.analysis-card th {
+    background-color: #edf1f6;
+    color: #26354a;
+}

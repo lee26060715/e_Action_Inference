@@ -171,5 +171,5 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_TRACK_STARTED = True
 
 LOGIN_URL = "/accounts/login/"
-LOGIN_REDIRECT_URL = "/api/analyses/"
+LOGIN_REDIRECT_URL = "analysis_home"
 LOGOUT_REDIRECT_URL = "/accounts/login/"
