@@ -6,7 +6,8 @@ from rest_framework.response import Response
 
 from .models import AnalysisJob
 from .serializers import AnalysisJobSerializer
-from .services import analyze_uploaded_video
+from django.db import transaction
+from .tasks import analyze_job
 
 
 class AnalysisJobViewSet(viewsets.ModelViewSet):
@@ -35,7 +36,17 @@ class AnalysisJobViewSet(viewsets.ModelViewSet):
         )
 
         if job.input_type == "UPLOAD":
-            analyze_uploaded_video(job)
+
+            def enqueue_job():
+                task = analyze_job.delay(job.id)
+
+                AnalysisJob.objects.filter(id=job.id).update(
+                    celery_task_id=task.id
+                )
+
+                job.celery_task_id = task.id
+
+            transaction.on_commit(enqueue_job)
 
     @action(detail=True, methods=["get"])
     def status(self, request, pk=None):
