@@ -173,3 +173,10 @@ CELERY_TASK_TRACK_STARTED = True
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "analysis_home"
 LOGOUT_REDIRECT_URL = "/accounts/login/"
+
+# IP Webcam 설정
+IP_WEBCAM_URL = os.getenv("IP_WEBCAM_URL", "")
+
+IP_WEBCAM_CAPTURE_SECONDS = int(
+    os.getenv("IP_WEBCAM_CAPTURE_SECONDS", "8")
+)
