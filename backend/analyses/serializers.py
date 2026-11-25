@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import AnalysisJob, PersonPrediction
+from django.conf import settings
 
 
 class PersonPredictionSerializer(serializers.ModelSerializer):
@@ -54,7 +55,9 @@ class AnalysisJobSerializer(serializers.ModelSerializer):
             "predictions",
         )
 
+    
     def validate(self, attrs):
+
         if self.instance is not None:
             allowed_fields = {"title", "memo"}
 
@@ -70,6 +73,7 @@ class AnalysisJobSerializer(serializers.ModelSerializer):
         camera_url = attrs.get("camera_url")
 
         if input_type == "UPLOAD":
+
             if not video:
                 raise serializers.ValidationError(
                     "영상 파일을 업로드해주세요."
@@ -86,6 +90,7 @@ class AnalysisJobSerializer(serializers.ModelSerializer):
                 )
 
         elif input_type == "IP_WEBCAM":
+
             if not camera_url:
                 raise serializers.ValidationError(
                     "카메라 URL을 입력해주세요."
@@ -94,6 +99,16 @@ class AnalysisJobSerializer(serializers.ModelSerializer):
             if video:
                 raise serializers.ValidationError(
                     "IP Webcam 사용 시 영상 파일은 입력하지 않습니다."
+                )
+
+            if not settings.IP_WEBCAM_URL:
+                raise serializers.ValidationError(
+                    "서버에 카메라 URL이 설정되지 않았습니다."
+                )
+
+            if camera_url != settings.IP_WEBCAM_URL:
+                raise serializers.ValidationError(
+                    "허용되지 않은 카메라 URL입니다."
                 )
 
         return attrs

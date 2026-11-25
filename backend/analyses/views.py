@@ -35,7 +35,7 @@ class AnalysisJobViewSet(viewsets.ModelViewSet):
             user=self.request.user
         )
 
-        if job.input_type == "UPLOAD":
+        if job.input_type in ("UPLOAD", "IP_WEBCAM"):
 
             def enqueue_job():
                 task = analyze_job.delay(job.id)
