@@ -1,0 +1,74 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-container">
+
+    <h2>관리자 통계 대시보드</h2>
+
+    <section class="dashboard-summary">
+
+        <div class="summary-card">
+            <h3>전체 분석 작업</h3>
+            <p>{{ total_jobs }}건</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>분석 성공</h3>
+            <p>{{ success_jobs }}건</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>분석 실패</h3>
+            <p>{{ failure_jobs }}건</p>
+        </div>
+
+        <div class="summary-card">
+            <h3>전체 추론 결과</h3>
+            <p>{{ total_predictions }}건</p>
+        </div>
+
+    </section>
+
+    <p>판단 불가(UNKNOWN): {{ unknown_count }}건</p>
+
+    <section class="dashboard-charts">
+
+        <div class="chart-card">
+            <h3>동작별 인식 건수</h3>
+            <div style="height: 320px;">
+                <canvas id="action-chart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <h3>분석 상태별 작업 수</h3>
+            <div style="height: 320px;">
+                <canvas id="status-chart"></canvas>
+            </div>
+        </div>
+
+    </section>
+
+</div>
+
+{{ action_labels|json_script:"action-labels" }}
+{{ action_values|json_script:"action-values" }}
+{{ status_labels|json_script:"status-labels" }}
+{{ status_values|json_script:"status-values" }}
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+
+<script src="{% static 'js/dashboard.js' %}"></script>
+
+{% endblock %}

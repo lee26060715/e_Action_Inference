@@ -20,6 +20,7 @@
                 <a href="{% url 'analysis_home' %}">동작 분석</a>
 
                 {% if user.is_staff %}
+                    <a href="{% url 'dashboard' %}">대시보드</a>
                     <a href="{% url 'admin:index' %}">관리자</a>
                 {% endif %}
 

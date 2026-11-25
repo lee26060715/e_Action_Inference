@@ -8,5 +8,6 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     path("accounts/", include("accounts.urls")),
+    path("dashboard/", page_views.dashboard, name="dashboard"),
     path("", page_views.index, name="analysis_home"),
 ]
