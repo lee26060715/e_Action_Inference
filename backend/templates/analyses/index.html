@@ -92,16 +92,66 @@
                     <th>입력 방식</th>
                     <th>상태</th>
                     <th>생성 시간</th>
+                    <th>관리</th>
                 </tr>
             </thead>
             <tbody id="history-body">
                 <tr>
-                    <td colspan="5">분석 기록이 없습니다.</td>
+                    <td colspan="6">분석 기록이 없습니다.</td>
                 </tr>
             </tbody>
         </table>
     </section>
+        <!-- 분석 기록 상세 정보 -->
+        <section class="analysis-card" id="detail-section" hidden>
 
+            <h3>분석 기록 상세 정보</h3>
+
+            <p>Job ID: <span id="detail-id">-</span></p>
+            <p>입력 방식: <span id="detail-input-type">-</span></p>
+            <p>상태: <span id="detail-status">-</span></p>
+            <p>생성 시간: <span id="detail-created-at">-</span></p>
+
+            <form id="detail-form">
+
+                <label for="detail-title">제목</label>
+                <input type="text" id="detail-title" maxlength="100">
+
+                <label for="detail-memo">메모</label>
+                <textarea id="detail-memo" rows="3"></textarea>
+
+                <div class="detail-buttons">
+                    <button type="submit">수정 저장</button>
+
+                    <button type="button" id="delete-button">
+                        기록 삭제
+                    </button>
+
+                    <button type="button" id="close-detail-button">
+                        닫기
+                    </button>
+                </div>
+
+            </form>
+
+            <p id="detail-message" role="status"></p>
+
+            <h3>저장된 분석 결과</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Track ID</th>
+                        <th>인식 동작</th>
+                        <th>신뢰도</th>
+                        <th>Window 수</th>
+                    </tr>
+                </thead>
+                <tbody id="detail-prediction-body">
+                </tbody>
+            </table>
+
+        </section>
 </div>
 {% endblock %}
 

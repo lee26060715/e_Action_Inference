@@ -76,3 +76,54 @@
     background-color: #edf1f6;
     color: #26354a;
 }
+
+#detail-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#detail-form label {
+    font-weight: bold;
+}
+
+#detail-form input,
+#detail-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.detail-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.detail-buttons button {
+    flex: 1;
+}
+
+#delete-button {
+    background-color: #c62828;
+}
+
+#delete-button:hover {
+    background-color: #a82020;
+}
+
+#close-detail-button {
+    background-color: #64748b;
+}
+
+#detail-message {
+    font-weight: bold;
+}
+
+.history-detail-button {
+    padding: 6px 12px;
+    font-size: 13px;
+}

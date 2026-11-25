@@ -35,6 +35,10 @@ async function requestAPI(url, options = {}) {
         }
     });
 
+    if (response.status === 204) {
+        return null;
+    }
+
     const data = await response.json();
 
     if (!response.ok) {
@@ -77,19 +81,22 @@ function showEmpty(tbody, columns, message) {
 
 
 // 분석 결과 표시
-function renderPredictions(predictions) {
-    predictionBody.replaceChildren();
+function renderPredictions(
+    predictions,
+    tbody = predictionBody
+) {
+    tbody.replaceChildren();
 
     if (!predictions || predictions.length === 0) {
         showEmpty(
-            predictionBody, 4,
+            tbody, 4,
             "표시할 분석 결과가 없습니다."
         );
         return;
     }
 
     predictions.forEach(prediction => {
-        addRow(predictionBody, [
+        addRow(tbody, [
             prediction.track_id,
             actionNames[prediction.action_label]
                 || prediction.action_label,
@@ -111,7 +118,7 @@ async function loadHistory() {
     historyBody.replaceChildren();
 
     if (jobs.length === 0) {
-        showEmpty(historyBody, 5, "분석 기록이 없습니다.");
+        showEmpty(historyBody, 6, "분석 기록이 없습니다.");
         return;
     }
 
@@ -125,6 +132,23 @@ async function loadHistory() {
             job.status,
             new Date(job.created_at).toLocaleString("ko-KR")
         ]);
+
+        const row = historyBody.lastElementChild;
+        const cell = document.createElement("td");
+        const button = document.createElement("button");
+
+        button.type = "button";
+        button.textContent = "상세 보기";
+        button.className = "history-detail-button";
+
+        button.addEventListener("click", () => {
+            loadDetail(job.id).catch(error => {
+                errorMessage.textContent = error.message;
+            });
+        });
+
+        cell.appendChild(button);
+        row.appendChild(cell);
     });
 }
 
@@ -211,4 +235,141 @@ startButton.disabled = false;
 
 loadHistory().catch(error => {
     errorMessage.textContent = error.message;
+});
+
+
+
+// 분석 기록 상세 관리
+const detailSection = document.getElementById("detail-section");
+const detailForm = document.getElementById("detail-form");
+const detailMessage = document.getElementById("detail-message");
+const detailTitle = document.getElementById("detail-title");
+const detailMemo = document.getElementById("detail-memo");
+const deleteButton = document.getElementById("delete-button");
+const closeDetailButton = document.getElementById("close-detail-button");
+
+let selectedJobId = null;
+
+
+// 상세 조회
+async function loadDetail(id) {
+    const data = await requestAPI(`${API_URL}${id}/`);
+
+    selectedJobId = data.id;
+
+    document.getElementById("detail-id").textContent = data.id;
+
+    document.getElementById("detail-input-type").textContent =
+        data.input_type;
+
+    document.getElementById("detail-status").textContent =
+        data.status;
+
+    document.getElementById("detail-created-at").textContent =
+        new Date(data.created_at).toLocaleString("ko-KR");
+
+    detailTitle.value = data.title || "";
+    detailMemo.value = data.memo || "";
+
+    detailMessage.textContent = data.error_message || "";
+
+    deleteButton.disabled =
+        !["SUCCESS", "FAILURE"].includes(data.status);
+
+    renderPredictions(
+        data.predictions,
+        document.getElementById("detail-prediction-body")
+    );
+
+    detailSection.hidden = false;
+
+    detailSection.scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+
+// 제목 및 메모 수정
+detailForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    if (selectedJobId === null) {
+        return;
+    }
+
+    const id = selectedJobId;
+
+    try {
+        await requestAPI(`${API_URL}${id}/`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                title: detailTitle.value,
+                memo: detailMemo.value
+            })
+        });
+
+        await loadHistory();
+        await loadDetail(id);
+
+        detailMessage.textContent = "수정되었습니다.";
+
+    } catch (error) {
+        detailMessage.textContent = error.message;
+    }
+});
+
+
+// 분석 기록 삭제
+deleteButton.addEventListener("click", async () => {
+    if (selectedJobId === null) {
+        return;
+    }
+
+    const confirmed = confirm(
+        "이 분석 기록을 삭제하시겠습니까?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const id = selectedJobId;
+
+    deleteButton.disabled = true;
+
+    try {
+        await requestAPI(`${API_URL}${id}/`, {
+            method: "DELETE"
+        });
+
+        selectedJobId = null;
+        detailSection.hidden = true;
+
+        if (jobId.textContent === String(id)) {
+            jobId.textContent = "-";
+            jobStatus.textContent = "대기 중";
+            errorMessage.textContent = "";
+
+            showEmpty(
+                predictionBody, 4,
+                "아직 분석 결과가 없습니다."
+            );
+        }
+
+        await loadHistory();
+
+    } catch (error) {
+        detailMessage.textContent = error.message;
+        deleteButton.disabled = false;
+    }
+});
+
+
+// 상세 화면 닫기
+closeDetailButton.addEventListener("click", () => {
+    detailSection.hidden = true;
+    selectedJobId = null;
 });
