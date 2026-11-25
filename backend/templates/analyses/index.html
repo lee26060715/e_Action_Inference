@@ -19,7 +19,30 @@
         <form id="analysis-form" enctype="multipart/form-data">
             {% csrf_token %}
 
-            <input type="hidden" name="input_type" value="UPLOAD">
+            <label>입력 방식</label>
+
+            <div class="input-type-options">
+
+                <label>
+                    <input
+                        type="radio"
+                        name="input_type"
+                        value="UPLOAD"
+                        checked
+                    >
+                    영상 업로드
+                </label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="input_type"
+                        value="IP_WEBCAM"
+                    >
+                    IP Webcam
+                </label>
+
+            </div>
 
             <label for="title">분석 제목</label>
             <input type="text" id="title" name="title"
@@ -40,9 +63,37 @@
                 <option value="wave">손 흔들기</option>
             </select>
 
-            <label for="video">분석 영상 (MP4)</label>
-            <input type="file" id="video" name="video"
-                   accept=".mp4" required>
+            <div id="upload-fields" class="input-fields">
+
+                <label for="video">분석 영상 (MP4)</label>
+
+                <input
+                    type="file"
+                    id="video"
+                    name="video"
+                    accept=".mp4"
+                    required
+                >
+
+            </div>
+
+            <div id="camera-fields" class="input-fields" hidden>
+
+                <label for="camera-url">카메라 URL</label>
+
+                <input
+                    type="url"
+                    id="camera-url"
+                    name="camera_url"
+                    placeholder="http://YOUR_CAMERA_IP:8080/video"
+                    disabled
+                >
+
+                <p class="input-help">
+                    등록된 IP Webcam에서 8초간 영상을 수집합니다.
+                </p>
+
+            </div>
 
             <button type="submit" id="start-button" disabled>
                 분석 시작

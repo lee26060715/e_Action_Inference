@@ -373,3 +373,51 @@ closeDetailButton.addEventListener("click", () => {
     detailSection.hidden = true;
     selectedJobId = null;
 });
+
+
+// 입력 방식 선택
+const inputTypeRadios = document.querySelectorAll(
+    'input[name="input_type"]'
+);
+
+const uploadFields = document.getElementById("upload-fields");
+const cameraFields = document.getElementById("camera-fields");
+
+const videoInput = document.getElementById("video");
+const cameraUrlInput = document.getElementById("camera-url");
+
+
+// 입력 방식에 따른 화면 전환
+function updateInputFields() {
+
+    const inputType = document.querySelector(
+        'input[name="input_type"]:checked'
+    ).value;
+
+    const isUpload = inputType === "UPLOAD";
+
+    // 영상 업로드 입력란
+    uploadFields.hidden = !isUpload;
+    videoInput.disabled = !isUpload;
+    videoInput.required = isUpload;
+
+    // IP Webcam 입력란
+    cameraFields.hidden = isUpload;
+    cameraUrlInput.disabled = isUpload;
+    cameraUrlInput.required = !isUpload;
+}
+
+
+// 입력 방식 변경 이벤트
+inputTypeRadios.forEach(radio => {
+
+    radio.addEventListener(
+        "change",
+        updateInputFields
+    );
+
+});
+
+
+// 최초 화면 초기화
+updateInputFields();
